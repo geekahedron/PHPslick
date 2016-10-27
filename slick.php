@@ -4,6 +4,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 define("BR","<br />");
 define("SC","SELF_CLOSING_TAG");
 define("NI","NON_INDENTING_TAG");
+define("ERR","ERROR_REPLACEMENT_PLACEHOLDER");
 
 $css = [];
 $scripts = [];
@@ -73,10 +74,17 @@ function addError($err) {
 }
 
 function printErrors() {
+	prtTag("div","class=\"errordiv\"",ERR);
+}
+
+function displayErrors() {
 	global $errors;
+	global $printString;
+	$e = "";
 	foreach ($errors as $error) {
-		prtTag("div","class=\"errordiv\"",$error);
+		$e .= sprintf("<span class='error'>%s</span>",$error);
 	}
+	str_replace(ERR,$e,$printString);
 }
 
 function addMessage($msg) {
@@ -92,7 +100,6 @@ function printMessages() {
 	}
 }
 
-
 function addCSS($s, $full=FALSE) {
 	global $css;
 	$css[] = ($full?$s:"/css/".$s.".css");
@@ -104,7 +111,6 @@ function printCSS() {
 		prtTag("link","rel=\"stylesheet\" type=\"text/css\" href=\"".$csspath."\"",SC);
 	}
 }
-
 
 function addScript($s) {
 	global $scripts;
